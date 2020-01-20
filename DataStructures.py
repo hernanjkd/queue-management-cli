@@ -9,10 +9,18 @@ class Queue:
             self._mode = mode
     
     def enqueue(self, item):
-        pass
+        self._queue.append(item)
+        items_in_front = self.size() - 1 if self._mode == 'FIFO' else 0
+        qty = 'is 1 item' if items_in_front == 1 else f'are {items_in_front} items'
+        return f'{item} added to queue. There {qty} before it.'
+
     def dequeue(self):
-        pass
+        item = self._queue.pop(0) if self._mode == 'FIFO' else self._queue.pop()
+        
+        return f'{item} has been removed from queue'
+
     def get_queue(self):
-        pass
+        return self._queue
+
     def size(self):
         return len(self._queue) 
