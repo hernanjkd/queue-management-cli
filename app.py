@@ -61,6 +61,7 @@ def start():
         elif option == 5:
             jfile = open('queue.json','r')
             print( json.load(jfile) )
+            jfile.close()
         elif option == 6:
             print("Bye bye!")
             return None
