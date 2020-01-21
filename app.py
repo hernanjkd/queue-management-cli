@@ -9,7 +9,7 @@ from DataStructures import Queue
 
 # there queue has to be declared globally (outside any other function)
 # that way all methods have access to it
-queue = Queue(mode="LIFO", current_queue=['bob','kate','rick'])
+queue = Queue(mode='FIFO', current_queue=['bob','kate','rick','romeo','juliet'])
 
 def show_main_menu():
     print('''
@@ -23,17 +23,38 @@ What would you like to do (type a number and press enter)?
     ''')
     response = input()
     return response
-    
-def print_queue():
-    # you must print on the console the entire queue list
-    print("Printing the entire list...")
-    print(queue.get_queue())
 
 def enqueue():
     print('\nWho would you like to add to the queue?')
-    item = input()
-    print( queue.enqueue( item ))
+    person = input()
+    queue.enqueue( person )
+    ppl_in_front = queue.size() - 1 if queue._mode == 'FIFO' else 0
+    qty = 'is 1 person' if ppl_in_front == 1 else f'are {ppl_in_front} people'
+    print(f'{person} added to queue. There {qty} before it.')
+
+def dequeue():
+    person = queue.dequeue()
+    print(f'{person} has been removed from queue')
         
+def print_queue():
+    print("Printing the entire list...")
+    print(queue.get_queue())
+
+def export_queue():
+    print('Exporting queue to json file...')
+    jfile = open('queue.json','w')
+    json.dump( queue.get_queue(), jfile )
+    jfile.close()
+    print('json file has been created successfully.')
+
+def import_queue():
+    print('Importing queue from json file...')
+    jfile = open('queue.json','r')
+    global queue
+    queue = Queue( mode='FIFO', current_queue=json.load(jfile) )
+    jfile.close()
+    print_queue()
+
 def start():
     
     print("\nHello, this is the Command Line Interface for a Queue Managment application.")
@@ -50,18 +71,13 @@ def start():
         if option == 1:
             enqueue()
         elif option == 2:
-            print( queue.dequeue() )
+            dequeue()
         elif option == 3:
             print_queue()
         elif option == 4:
-            jfile = open('queue.json','w')
-            json.dump( queue.get_queue(), jfile )
-            jfile.close()
-            print('json file has been created successfully.')
+            export_queue()
         elif option == 5:
-            jfile = open('queue.json','r')
-            print( json.load(jfile) )
-            jfile.close()
+            import_queue()
         elif option == 6:
             print("Bye bye!")
             return None
